@@ -15,7 +15,7 @@ Citation: Hausdorff JM et al. Gait in Neurodegenerative Disease Database. Physio
 
 **Problem statement**
 
-Classify adults as having a neurodegenerative disease (Parkinson's disease, Huntington's disease or ALS) or as healthy controls, from stride-to-stride gait timing recorded by force-sensitive insoles during a five-minute walk, and identify which gait characteristics drive the classification. The aim is to support objective, low-cost gait screening in outpatient and primary-care settings.
+Neurodegenerative diseases such as Parkinson’s disease, Huntington’s disease, and amyotrophic lateral sclerosis (ALS) can produce distinct alterations in walking patterns,clinically referred to as gait. This study aims to determine whether machine learning can use quantitative stride-to-stride gait characteristics to classify adults as having Parkinson’s disease, Huntington’s disease, ALS, or being a healthy control. It will also identify which gait characteristics contribute most strongly to distinguishing among these groups
 
 **Why it matters**
 
