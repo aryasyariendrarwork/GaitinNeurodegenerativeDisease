@@ -26,7 +26,7 @@ Parkinson's disease, Huntington's disease and ALS all change how people walk, bu
 Binary classification (neurodegenerative disease vs healthy control), with feature-importance analysis.
 
 Known limitations
-Small sample: 64 participants in total, so results are a proof of concept.
-Class imbalance: 48 patients vs 16 controls.
-Pooled diseases: three diseases are combined into one "disease" class, although they affect gait in different ways.
-Confounding: controls and patients may differ in age and walking speed.
+- Small sample: 64 participants in total, so results are a proof of concept.
+- Class imbalance: 48 patients vs 16 controls.
+- Pooled diseases: three diseases are combined into one "disease" class, although they affect gait in different ways.
+- Confounding: controls and patients may differ in age and walking speed.
