@@ -1,5 +1,5 @@
 # Classifying Neurodegenerative Disease from Quantitative Gait Features
-EXSU 500 team project for Group 11 - Dubila Wongibe Trecey Bongayen, Arya Nandhana Syariendrar, Carly stroll, Anshini Shah
+EXSU 500 team project for Group 11 - Dubila Wongibe Trecey Bongayen, Arya Nandhana Syariendrar, Carly Stroll, Anshini Shah
 
 **Research question**
 
