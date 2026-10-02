@@ -19,7 +19,7 @@ Neurodegenerative diseases such as Parkinson’s disease, Huntington’s disease
 
 **Why it matters**
 
-Parkinson's disease, Huntington's disease and ALS all change how people walk, but gait impairment is mostly judged by a clinician's observation, which is subjective and needs specialist time. Wearable insoles can measure stride timing objectively and cheaply. Earlier work found that stride-to-stride variability is markedly higher in these diseases than in healthy adults (Hausdorff et al., 1998). A model that separates patients from controls could support earlier specialist referral. Identifying which gait features matter makes the model's decisions understandable to clinicians, which is essential for trust and adoption in medicine. We will also check whether the model relies on disease-related gait patterns or only on non-specific factors such as slower walking speed and older age.
+Parkinson's disease, Huntington's disease and ALS all change how people walk, but gait impairment is mostly judged by a clinician's observation, which is subjective and needs specialist time. Wearable insoles can measure stride timing objectively and cheaply. Previous work found that stride-to-stride variability is markedly higher in these diseases than in healthy adults (Hausdorff et al., 1998). A model that separates patients from controls could support earlier specialist referral. Identifying which gait features matter makes the model's decisions understandable to clinicians, which is essential for trust and adoption in medicine. We will also check whether the model relies on disease-related gait patterns or only on non-specific factors such as slower walking speed and older age.
 
 **Task type**
 
