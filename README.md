@@ -15,7 +15,7 @@ Citation: Hausdorff JM et al. Gait in Neurodegenerative Disease Database. Physio
 
 **Problem statement**
 
-Neurodegenerative diseases such as Parkinson’s disease, Huntington’s disease, and amyotrophic lateral sclerosis (ALS) can produce distinct alterations in walking patterns, clinically referred to as gait. This study aims to determine whether machine learning can use quantitative stride-to-stride gait characteristics to classify adults as having Parkinson’s disease, Huntington’s disease, ALS, or being a healthy control. It will also identify which gait characteristics contribute most strongly to distinguishing among these groups
+Neurodegenerative diseases such as Parkinson’s disease, Huntington’s disease, and amyotrophic lateral sclerosis (ALS) can produce distinct alterations in walking patterns, clinically referred to as gait. This study aims to determine whether machine learning can use quantitative stride-to-stride gait characteristics to classify adults as having Parkinson’s disease, Huntington’s disease, ALS, or being a healthy control. It will also identify which gait characteristics contribute most strongly to distinguishing among these groups.
 
 **Why it matters**
 
