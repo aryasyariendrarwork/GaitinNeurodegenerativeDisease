@@ -1,0 +1,5 @@
+dataset,model,participants,balanced_accuracy,roc_auc,true_negatives,false_positives,false_negatives,true_positives
+all_participants,baseline,64,0.5,0.462890625,0,16,0,48
+all_participants,logistic_regression,64,0.7708333333333333,0.8450520833333334,15,1,19,29
+without_hunt20,baseline,63,0.5,0.46276595744680854,0,16,0,47
+without_hunt20,logistic_regression,63,0.7772606382978724,0.8364361702127661,15,1,18,29
