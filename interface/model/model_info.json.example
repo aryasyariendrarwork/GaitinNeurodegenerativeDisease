@@ -1,0 +1,7 @@
+{
+  "model_name": "Fill in, e.g. Random forest (9 robust features)",
+  "sensitivity_pct": null,
+  "specificity_pct": null,
+  "auroc": null,
+  "auroc_ci": null
+}
