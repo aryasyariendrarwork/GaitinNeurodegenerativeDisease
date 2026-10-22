@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold
@@ -12,8 +13,12 @@ from sklearn.preprocessing import StandardScaler
 data = pd.read_csv("data/processed/gait_features.csv")
 
 feature_columns = [
+    "left_stride_mean_sec",
+    "left_stride_sd_sec",
     "left_stride_median_sec",
     "left_stride_iqr_sec",
+    "right_stride_mean_sec",
+    "right_stride_sd_sec",
     "right_stride_median_sec",
     "right_stride_iqr_sec",
 ]
@@ -49,14 +54,12 @@ for dataset_name, participants in datasets.items():
     for fold, (train_indices, test_indices) in enumerate(
         cv.split(X, y), start=1
     ):
-        model = make_pipeline(
-            StandardScaler(),
-            LogisticRegression(
-                class_weight="balanced",
-                max_iter=2000,
-                random_state=42,
-            ),
-        )
+        model = RandomForestClassifier(
+    n_estimators=200,
+    random_state=42,
+    class_weight="balanced",
+)
+        
 
         model.fit(
             X.iloc[train_indices],
@@ -103,8 +106,12 @@ summary.to_csv(
 )
 
 labels = [
+    "Left stride mean",
+    "Left stride SD",
     "Left stride median",
     "Left stride IQR",
+    "Right stride mean",
+    "Right stride SD",
     "Right stride median",
     "Right stride IQR",
 ]
@@ -123,7 +130,7 @@ for ax, dataset_name in zip(axes, datasets):
         values["mean"] * 100,
         xerr=values["std"] * 100,
         color="steelblue",
-        capsize=4,
+        capsize=8,
     )
 
     ax.axvline(0, color="black", linewidth=1)

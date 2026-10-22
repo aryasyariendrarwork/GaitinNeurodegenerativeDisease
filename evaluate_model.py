@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn.dummy import DummyClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     balanced_accuracy_score,
@@ -16,8 +17,12 @@ from sklearn.preprocessing import StandardScaler
 data = pd.read_csv("data/processed/gait_features.csv")
 
 feature_columns = [
+    "left_stride_mean_sec",
+    "left_stride_sd_sec",
     "left_stride_median_sec",
     "left_stride_iqr_sec",
+    "right_stride_mean_sec",
+    "right_stride_sd_sec",
     "right_stride_median_sec",
     "right_stride_iqr_sec",
 ]
@@ -64,6 +69,11 @@ for dataset_name, participants in datasets.items():
                     random_state=42,
                 ),
             ),
+            "random_forest": RandomForestClassifier(
+    n_estimators=200,
+    random_state=42,
+    class_weight="balanced",
+),
         }
 
         for model_name, model in models.items():
