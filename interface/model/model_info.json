@@ -1,0 +1,14 @@
+{
+  "model_name": "Random forest (8 stride features)",
+  "sensitivity_pct": 90,
+  "specificity_pct": 33,
+  "auroc": 0.63,
+  "auroc_ci": "0.17-1.00",
+  "auprc": 0.82,
+  "balanced_accuracy": 0.62,
+  "n_train": 50,
+  "n_test": 13,
+  "n_test_controls": 3,
+  "threshold": 0.5,
+  "participants": "63 (hunt20 excluded)"
+}

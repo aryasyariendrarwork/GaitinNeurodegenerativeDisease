@@ -1,12 +1,59 @@
 {
-  "_note": "Healthy-control reference values for the comparison chart: middle 50% (25th-75th percentile) and median of the 16 control participants, using the robust features in features.py. For the final app, recompute these from the TRAINING-set controls only. axis_min/axis_max only set the chart scale.",
-  "stride_time_median_s": {"q25": 1.038, "q75": 1.102, "median": 1.078, "axis_min": 0.8, "axis_max": 1.8},
-  "stride_time_rcv": {"q25": 2.814, "q75": 3.696, "median": 3.262, "axis_min": 0, "axis_max": 15},
-  "swing_pct_median": {"q25": 34.685, "q75": 36.918, "median": 36.36, "axis_min": 25, "axis_max": 42},
-  "swing_time_rcv": {"q25": 4.179, "q75": 5.539, "median": 4.741, "axis_min": 0, "axis_max": 25},
-  "stance_time_rcv": {"q25": 3.297, "q75": 5.001, "median": 3.79, "axis_min": 0, "axis_max": 20},
-  "double_support_pct_median": {"q25": 26.092, "q75": 30.852, "median": 27.32, "axis_min": 20, "axis_max": 48},
-  "double_support_rcv": {"q25": 6.606, "q75": 8.924, "median": 8.224, "axis_min": 0, "axis_max": 40},
-  "stride_asymmetry_pct": {"q25": 1.008, "q75": 1.27, "median": 1.216, "axis_min": 0, "axis_max": 10},
-  "swing_asymmetry_pct": {"q25": 0.585, "q75": 1.933, "median": 0.85, "axis_min": 0, "axis_max": 8}
+  "_note": "Healthy ranges from the 13 TRAINING-set controls (25th-75th percentile and median). Written by save_model.py.",
+  "left_stride_mean_sec": {
+    "q25": 1.0409,
+    "q75": 1.1084,
+    "median": 1.0723,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "left_stride_sd_sec": {
+    "q25": 0.0369,
+    "q75": 0.0499,
+    "median": 0.0402,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "left_stride_median_sec": {
+    "q25": 1.04,
+    "q75": 1.0967,
+    "median": 1.0667,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "left_stride_iqr_sec": {
+    "q25": 0.0292,
+    "q75": 0.04,
+    "median": 0.03,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "right_stride_mean_sec": {
+    "q25": 1.0408,
+    "q75": 1.1082,
+    "median": 1.0724,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "right_stride_sd_sec": {
+    "q25": 0.0369,
+    "q75": 0.053,
+    "median": 0.0392,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "right_stride_median_sec": {
+    "q25": 1.04,
+    "q75": 1.0967,
+    "median": 1.0633,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "right_stride_iqr_sec": {
+    "q25": 0.03,
+    "q75": 0.04,
+    "median": 0.0317,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  }
 }

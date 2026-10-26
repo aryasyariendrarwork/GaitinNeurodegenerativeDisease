@@ -137,8 +137,8 @@ neurodegenerative disease.</p></div>""", unsafe_allow_html=True)
     st.markdown("## How it works")
     steps = [("STEP 1", "Provide a recording", "Upload a stride time-series file (.ts) from force-sensing "
               "insoles, or pick an example recording."),
-             ("STEP 2", "We summarise the walk", "Hundreds of steps are condensed into nine gait features: "
-              "timing, variability and left–right symmetry."),
+             ("STEP 2", "We summarise the walk", "Hundreds of steps are condensed into eight stride features: "
+              "typical stride time and its variability, for each foot."),
              ("STEP 3", "See the result and why", "A probability with its uncertainty range, each feature "
               "compared with healthy adults, and the model’s known limits.")]
     for col, (tag, title, text) in zip(st.columns(3), steps):
@@ -179,7 +179,7 @@ def page_input():
 <li>13 whitespace-separated columns per row (PhysioNet gait .ts format)</li>
 <li>One row per stride; at least 50 strides</li>
 <li>Times in seconds; numbers only</li>
-<li>A failed foot sensor is detected and reported</li></ul></div>""", unsafe_allow_html=True)
+<li>Both foot sensors working (a failed sensor is detected and reported)</li></ul></div>""", unsafe_allow_html=True)
     with col_b:
         st.markdown("### Option B · Use an example")
         examples = sorted(EXAMPLES_DIR.glob("*.ts")) if EXAMPLES_DIR.exists() else []
@@ -264,6 +264,7 @@ recording many times, each time resampling its strides; 95% of those estimates f
 <div><div class="muted" style="font-size:13px">Controls cleared</div><b style="font-size:22px">{val("specificity_pct", "{}%")}</b></div>
 <div><div class="muted" style="font-size:13px">AUROC (95% CI)</div><b>{val("auroc")} {val("auroc_ci", "({})") if info else ""}</b></div>
 <div><div class="muted" style="font-size:13px">Model</div><b>{html.escape(val("model_name"))}</b></div></div>
+{f'<p class="muted" style="margin:14px 0 0;font-size:13px">Test set: {m["n_test"]} participants ({m["n_test_controls"]} controls), so these estimates are imprecise.</p>' if "n_test" in m else ""}
 </div>""", unsafe_allow_html=True)
 
     # --- feature comparison + ranking ----------------------------------------
@@ -308,9 +309,9 @@ recording many times, each time resampling its strides; 95% of those estimates f
 
     # --- limitations ---------------------------------------------------------
     st.markdown("""<div class="card" style="background:#EEF2F1"><h3>Limitations of this model</h3><ul class="muted" style="font-size:15px">
-<li>Trained on only 64 people (48 patients, 16 healthy controls) from one study.</li>
+<li>Trained on only 50 people from one study (tested on 13); hunt20 was excluded because of a faulty sensor.</li>
 <li>Healthy controls were younger on average (median 35 vs 55.5 years), so age may influence results.</li>
-<li>It cannot tell which disease is present, how severe it is, or rule disease out.</li>
+<li>It uses stride timing only, and cannot tell which disease is present, how severe it is, or rule disease out.</li>
 <li>Not validated on other sensors, walking conditions or populations (e.g. children, people with injuries or other neurological conditions).</li>
 </ul></div>""", unsafe_allow_html=True)
 

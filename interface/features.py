@@ -6,13 +6,14 @@ If the team changes how features are computed for training, change this file
 too (or import the training code here), otherwise the app will feed the model
 different numbers from the ones it learned on.
 
-The 9 features are outlier-resistant (median / IQR based) summaries of one
-participant's walk, as in robust_9_features.py.
+The 8 features are the team's stride-time features (as in the team's
+data/processed/gait_features.csv): mean, SD, median and IQR of the stride
+interval, for the left and right foot separately, computed from the raw .ts
+file without filtering.
 """
 
 import io
 
-import numpy as np
 import pandas as pd
 
 COLUMNS = [
@@ -25,30 +26,29 @@ COLUMNS = [
     "double_support_s", "double_support_pct",
 ]
 
-# Order matters: the model receives the features as columns in this order.
+# Order matters: the model receives the features as columns in this order,
+# with exactly these names (the same column names as gait_features.csv).
 FEATURE_ORDER = [
-    "stride_time_median_s",
-    "stride_time_rcv",
-    "swing_pct_median",
-    "swing_time_rcv",
-    "stance_time_rcv",
-    "double_support_pct_median",
-    "double_support_rcv",
-    "stride_asymmetry_pct",
-    "swing_asymmetry_pct",
+    "left_stride_mean_sec",
+    "left_stride_sd_sec",
+    "left_stride_median_sec",
+    "left_stride_iqr_sec",
+    "right_stride_mean_sec",
+    "right_stride_sd_sec",
+    "right_stride_median_sec",
+    "right_stride_iqr_sec",
 ]
 
-# Human-readable labels for the interface.
+# Human-readable labels for the interface: (name, description, unit, decimals).
 FEATURE_INFO = {
-    "stride_time_median_s": ("Stride time", "Typical duration of one stride", " s", 2),
-    "stride_time_rcv": ("Stride time variability", "Stride-to-stride irregularity", "%", 1),
-    "swing_pct_median": ("Swing phase", "Share of stride with the foot in the air", "%", 1),
-    "swing_time_rcv": ("Swing time variability", "Irregularity of time in the air", "%", 1),
-    "stance_time_rcv": ("Stance time variability", "Irregularity of time on the ground", "%", 1),
-    "double_support_pct_median": ("Double support", "Share of stride with both feet down", "%", 1),
-    "double_support_rcv": ("Double support variability", "Irregularity of both-feet-down time", "%", 1),
-    "stride_asymmetry_pct": ("Left–right stride asymmetry", "Difference between left and right strides", "%", 1),
-    "swing_asymmetry_pct": ("Left–right swing asymmetry", "Difference in left and right swing share", "%", 1),
+    "left_stride_mean_sec": ("Left stride time (mean)", "Average duration of a left stride", " s", 2),
+    "left_stride_sd_sec": ("Left stride variability (SD)", "Spread of left stride times", " s", 3),
+    "left_stride_median_sec": ("Left stride time (median)", "Typical duration of a left stride", " s", 2),
+    "left_stride_iqr_sec": ("Left stride variability (IQR)", "Spread of the middle 50% of left strides", " s", 3),
+    "right_stride_mean_sec": ("Right stride time (mean)", "Average duration of a right stride", " s", 2),
+    "right_stride_sd_sec": ("Right stride variability (SD)", "Spread of right stride times", " s", 3),
+    "right_stride_median_sec": ("Right stride time (median)", "Typical duration of a right stride", " s", 2),
+    "right_stride_iqr_sec": ("Right stride variability (IQR)", "Spread of the middle 50% of right strides", " s", 3),
 }
 
 MIN_STRIDES = 50            # fewer strides -> variability estimates are unreliable
@@ -92,68 +92,39 @@ def load_ts(raw_bytes):
                             f"at least {MIN_STRIDES} are needed for reliable variability measures.")
 
     warnings = []
-    df, failed = remove_failed_sensor(df)
-    for foot in failed:
-        warnings.append(f"The {foot}-foot sensor appears faulty (stride times above "
-                        f"{SENSOR_FAILURE_STRIDE_S:.0f} s throughout). The analysis uses the other "
-                        "foot only, and asymmetry and double-support features are unavailable.")
-    if len(failed) == 2:
-        raise GaitFileError("Both foot sensors appear faulty, so this recording cannot be analysed.")
+    for foot in ["left", "right"]:
+        if df[f"{foot}_stride_s"].median() > SENSOR_FAILURE_STRIDE_S:
+            raise GaitFileError(f"The {foot}-foot sensor appears faulty (stride times above "
+                                f"{SENSOR_FAILURE_STRIDE_S:.0f} s throughout). The model needs both feet, "
+                                "so this recording cannot be analysed.")
 
     n_negative = int((df[COLUMNS[1:]] < 0).any(axis=1).sum())
     if n_negative > 0.2 * len(df):
         raise GaitFileError(f"{n_negative} of {len(df)} strides contain negative time values, "
                             "which suggests a recording problem.")
     if n_negative:
-        warnings.append(f"{n_negative} stride(s) contain negative values. The median-based "
-                        "features limit their influence.")
+        warnings.append(f"{n_negative} stride(s) contain negative values; they are included "
+                        "as recorded, as in the training data.")
     return df, warnings
 
 
-def remove_failed_sensor(df):
-    """A foot whose median stride is > 3 s has a broken sensor for the whole walk.
-    Set that foot, and double support (which needs both feet), to missing."""
-    df = df.copy()
-    failed = []
-    for foot in ["left", "right"]:
-        if df[f"{foot}_stride_s"].median() > SENSOR_FAILURE_STRIDE_S:
-            cols = [c for c in COLUMNS if c.startswith(foot)] + ["double_support_s", "double_support_pct"]
-            df[cols] = np.nan
-            failed.append(foot)
-    return df, failed
-
-
 # ------------------------------------------------------------------ features --
-def _iqr(x):
-    return x.quantile(0.75) - x.quantile(0.25)
-
-
-def _robust_cv(x):
-    """IQR / median x 100: outlier-resistant measure of variability (%)."""
-    if x.notna().sum() == 0:
-        return np.nan
-    return 100 * _iqr(x) / x.median()
-
-
-def _both_feet(left, right):
-    vals = [v for v in (left, right) if pd.notna(v)]
-    return float(np.mean(vals)) if vals else np.nan
+def _stats(x):
+    """Mean, SD (n-1), median and IQR (linear quantiles), pandas defaults.
+    save_model.py --data-dir checks these match the training CSV."""
+    return x.mean(), x.std(), x.median(), x.quantile(0.75) - x.quantile(0.25)
 
 
 def compute_features(df):
-    """Return the 9 features for one participant as a dict (NaN where unavailable)."""
-    stride = df[["left_stride_s", "right_stride_s"]].mean(axis=1)
-    return {
-        "stride_time_median_s": stride.median(),
-        "stride_time_rcv": _both_feet(_robust_cv(df.left_stride_s), _robust_cv(df.right_stride_s)),
-        "swing_pct_median": _both_feet(df.left_swing_pct.median(), df.right_swing_pct.median()),
-        "swing_time_rcv": _both_feet(_robust_cv(df.left_swing_s), _robust_cv(df.right_swing_s)),
-        "stance_time_rcv": _both_feet(_robust_cv(df.left_stance_s), _robust_cv(df.right_stance_s)),
-        "double_support_pct_median": df.double_support_pct.median(),
-        "double_support_rcv": _robust_cv(df.double_support_s),
-        "stride_asymmetry_pct": 100 * ((df.left_stride_s - df.right_stride_s).abs() / stride).median(),
-        "swing_asymmetry_pct": abs(df.left_swing_pct.median() - df.right_swing_pct.median()),
-    }
+    """Return the 8 stride features for one participant as a dict."""
+    feats = {}
+    for foot in ["left", "right"]:
+        mean, sd, median, iqr = _stats(df[f"{foot}_stride_s"])
+        feats[f"{foot}_stride_mean_sec"] = mean
+        feats[f"{foot}_stride_sd_sec"] = sd
+        feats[f"{foot}_stride_median_sec"] = median
+        feats[f"{foot}_stride_iqr_sec"] = iqr
+    return feats
 
 
 def features_frame(feature_dict):

@@ -5,14 +5,13 @@
 
 To connect the real model, the modelling lead only needs to:
 
-  1. Train the final model on the 9 features from features.py, with the
-     columns in features.FEATURE_ORDER, as a scikit-learn estimator or
-     Pipeline that has .predict_proba() (class 1 = disease).
-  2. Save it:
-         import joblib
-         joblib.dump(final_model, "model/model.joblib")
-  3. (Optional) Fill in model/model_info.json with the held-out TEST-set
-     results, so the "How reliable is the model?" card shows real numbers.
+  run save_model.py (see README). It trains the final random forest on the
+  same participants and split as the report, saves model/model.joblib, writes
+  the held-out test results to model/model_info.json and the training-set
+  healthy ranges to reference_ranges.json.
+
+  Any other scikit-learn classifier with .predict_proba() (class 1 = disease),
+  trained on the columns in features.FEATURE_ORDER, also works.
 
 Nothing else in the app needs to change. While model/model.joblib does not
 exist, the app runs in DEMO MODE and shows clearly labelled placeholder
@@ -102,9 +101,9 @@ def predict(model, df, feature_dict, reference, seed=42):
 
 def _demo_result():
     """Placeholder output shown until model/model.joblib exists. NOT a real prediction."""
-    illustrative = [0.21, 0.17, 0.12, 0.10, 0.07, 0.05, 0.03, 0.01, 0.005]
-    order = ["swing_time_rcv", "stride_asymmetry_pct", "stance_time_rcv", "stride_time_rcv",
-             "double_support_rcv", "double_support_pct_median", "swing_pct_median",
-             "stride_time_median_s", "swing_asymmetry_pct"]
+    illustrative = [0.21, 0.17, 0.12, 0.08, 0.05, 0.03, 0.02, 0.01]
+    order = ["left_stride_iqr_sec", "right_stride_iqr_sec", "left_stride_sd_sec", "right_stride_sd_sec",
+             "left_stride_mean_sec", "right_stride_mean_sec", "left_stride_median_sec",
+             "right_stride_median_sec"]
     return {"prob": 0.84, "prob_low": 0.71, "prob_high": 0.93,
             "drivers": list(zip(order, illustrative)), "demo": True}
