@@ -1,0 +1,59 @@
+{
+  "_note": "Healthy ranges from the 13 TRAINING-set controls (25th-75th percentile and median). Written by save_model.py.",
+  "left_stride_mean_sec": {
+    "q25": 1.0409,
+    "q75": 1.1084,
+    "median": 1.0723,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "left_stride_sd_sec": {
+    "q25": 0.0369,
+    "q75": 0.0499,
+    "median": 0.0402,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "left_stride_median_sec": {
+    "q25": 1.04,
+    "q75": 1.0967,
+    "median": 1.0667,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "left_stride_iqr_sec": {
+    "q25": 0.0292,
+    "q75": 0.04,
+    "median": 0.03,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "right_stride_mean_sec": {
+    "q25": 1.0408,
+    "q75": 1.1082,
+    "median": 1.0724,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "right_stride_sd_sec": {
+    "q25": 0.0369,
+    "q75": 0.053,
+    "median": 0.0392,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  },
+  "right_stride_median_sec": {
+    "q25": 1.04,
+    "q75": 1.0967,
+    "median": 1.0633,
+    "axis_min": 0.8,
+    "axis_max": 1.8
+  },
+  "right_stride_iqr_sec": {
+    "q25": 0.03,
+    "q75": 0.04,
+    "median": 0.0317,
+    "axis_min": 0.0,
+    "axis_max": 0.3
+  }
+}

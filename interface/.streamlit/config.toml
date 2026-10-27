@@ -1,0 +1,11 @@
+[server]
+maxUploadSize = 1          # MB; gait .ts files are ~20 KB
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#0E5C57"
+backgroundColor = "#F5F6F3"
+secondaryBackgroundColor = "#E9EDEA"
+textColor = "#17201E"
