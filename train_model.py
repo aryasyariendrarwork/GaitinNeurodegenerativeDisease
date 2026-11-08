@@ -3,9 +3,11 @@ from pathlib import Path
 from matplotlib.pylab import split
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import (
     balanced_accuracy_score,
     confusion_matrix,
@@ -85,11 +87,17 @@ for dataset_name, participants in datasets.items():
         ),
     ),
 
-    "random_forest": RandomForestClassifier(
-        n_estimators=200,
+   "deep_learning": make_pipeline(
+    StandardScaler(),
+    MLPClassifier(
+        hidden_layer_sizes=(32, 16),
+        activation="relu",
+        solver="adam",
+        alpha=0.001,
+        max_iter=5000,
         random_state=42,
-        class_weight="balanced",
     ),
+),
 }
 
     print(f"\nDataset: {dataset_name}")
@@ -109,46 +117,7 @@ for dataset_name, participants in datasets.items():
 )[:, 1]
 
         predicted_labels = (probabilities >= 0.5).astype(int)
-        model.fit(X_trainval, y_trainval)
-        test_probabilities = model.predict_proba(X_test)[:, 1]
-        test_predictions = (
-    test_probabilities >= 0.5
-).astype(int)
-        test_auc = roc_auc_score(
-    y_test,
-    test_probabilities,
-)
-        test_auprc = average_precision_score(
-    y_test,
-    test_probabilities,
-)
-        test_balanced_accuracy = balanced_accuracy_score(
-    y_test,
-    test_predictions,
-)
-        test_tn, test_fp, test_fn, test_tp = confusion_matrix(
-    y_test,
-    test_predictions,
-    labels=[0, 1]
-).ravel()
-        test_sensitivity = (
-    test_tp / (test_tp + test_fn)
-)
-        test_specificity = (
-    test_tn / (test_tn + test_fp)
-)
 
-        print("\nHELD-OUT TEST RESULTS")
-        print("Test Balanced Accuracy:",
-    round(test_balanced_accuracy, 3),
-        )
-        print("Test ROC AUC:", round(test_auc, 3))
-        print("Test AUPRC:", round(test_auprc, 3))
-        print("Test Sensitivity:", round(test_sensitivity, 3),
-)
-        print("Test Specificity:",round(test_specificity, 3))
-
-        
         balanced_accuracy = balanced_accuracy_score(
              y_trainval, predicted_labels
         )
@@ -194,13 +163,92 @@ for dataset_name, participants in datasets.items():
             "specificity": specificity,
         })
 
-        
+    
+# --------------------------
+# FINAL HELD-OUT TEST
+# --------------------------
 
-    #predictions.to_csv(
-        output_folder / f"{dataset_name}_predictions.csv",
-        index=False,
-    #)
+final_model = models["deep_learning"]
 
+final_model.fit(X_trainval, y_trainval)
+
+test_probabilities = final_model.predict_proba(
+    X_test
+)[:, 1]
+
+test_predictions = (
+    test_probabilities >= 0.5
+).astype(int)
+
+test_auc = roc_auc_score(
+    y_test,
+    test_probabilities,
+)
+
+test_auprc = average_precision_score(
+    y_test,
+    test_probabilities,
+)
+
+test_balanced_accuracy = balanced_accuracy_score(
+    y_test,
+    test_predictions,
+)
+
+test_tn, test_fp, test_fn, test_tp = confusion_matrix(
+    y_test,
+    test_predictions,
+    labels=[0, 1]
+).ravel()
+
+test_sensitivity = (
+    test_tp / (test_tp + test_fn)
+)
+
+test_specificity = (
+    test_tn / (test_tn + test_fp)
+)
+cm = confusion_matrix(
+    y_test,
+    test_predictions,
+    labels=[0, 1]
+)
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=["Control", "Disease"]
+)
+
+disp.plot(cmap="Blues")
+
+plt.title(
+    f"Confusion Matrix - {dataset_name}"
+)
+
+plt.tight_layout()
+
+plt.savefig(
+    output_folder / f"{dataset_name}_confusion_matrix.png",
+    dpi=300,
+)
+
+plt.close()
+
+print("\nFINAL HELD-OUT TEST RESULTS")
+print("AUROC:", round(test_auc, 3))
+print("AUPRC:", round(test_auprc, 3))
+print(
+    "Balanced Accuracy:",
+    round(test_balanced_accuracy, 3),
+)
+print(
+    "Sensitivity:",
+    round(test_sensitivity, 3),
+)
+print(
+    "Specificity:",
+    round(test_specificity, 3),
+)
 pd.DataFrame(results).to_csv(
     output_folder / "preliminary_model_results.csv",
     index=False,
@@ -209,3 +257,4 @@ pd.DataFrame(results).to_csv(
 
 print("\nResults saved in the results folder.")
 print("These are preliminary cross-validation results.")
+

@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 
 from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import (
     roc_auc_score,
@@ -55,13 +55,22 @@ models = {
             random_state=42,
         ),
     ),
-
-    "random_forest": RandomForestClassifier(
-        n_estimators=200,
+"deep_learning": make_pipeline(
+    StandardScaler(),
+    MLPClassifier(
+        hidden_layer_sizes=(32, 16),
+        activation="relu",
+        solver="adam",
+        alpha=0.001,
+        learning_rate="adaptive",
+        max_iter=3000,
         random_state=42,
-        class_weight="balanced",
     ),
+),
+
 }
+print("\nMODELS BEING EVALUATED:")
+print(list(models.keys()))
 
 rows = []
 

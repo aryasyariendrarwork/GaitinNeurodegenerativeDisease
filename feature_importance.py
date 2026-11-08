@@ -3,9 +3,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.inspection import permutation_importance
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import StratifiedKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -54,8 +54,13 @@ for dataset_name, participants in datasets.items():
     for fold, (train_indices, test_indices) in enumerate(
         cv.split(X, y), start=1
     ):
-        model = RandomForestClassifier(
-    n_estimators=200,
+        model = MLPClassifier(
+    hidden_layer_sizes=(32, 16),
+    activation="relu",
+    solver="adam",
+    alpha=0.001,
+    learning_rate="adaptive",
+    max_iter=3000,
     random_state=42,
     class_weight="balanced",
 )

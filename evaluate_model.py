@@ -3,8 +3,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import (
     balanced_accuracy_score,
     recall_score,
@@ -69,12 +69,20 @@ for dataset_name, participants in datasets.items():
                     random_state=42,
                 ),
             ),
-            "random_forest": RandomForestClassifier(
-    n_estimators=200,
-    random_state=42,
-    class_weight="balanced",
+         "deep_learning": make_pipeline(
+    StandardScaler(),
+    MLPClassifier(
+        hidden_layer_sizes=(32, 16),
+        activation="relu",
+        solver="adam",
+        alpha=0.001,
+        learning_rate="adaptive",
+        max_iter=3000,
+        random_state=42,
+    ),
 ),
         }
+
 
         for model_name, model in models.items():
             probabilities = cross_val_predict(
@@ -153,3 +161,4 @@ print(
 
 print("\nResults saved in the results folder.")
 print("Variation across repeats is not a confidence interval.")
+print("MODELS =", list(models.keys()))
